@@ -8,8 +8,8 @@
     "express": "^4.17.1"
   },
   "scripts": {
-    "start": "NODE_ENV=development ts-node src/*.ts",
-    "prod": "NODE_ENV=production ts-node src/*.ts",
+    "start": "NODE_ENV=development ts-node src/server.ts",
+    "prod": "NODE_ENV=production ts-node src/server.ts",
     "lint": "ts-standard --ext ts --fix"
   },
   "devDependencies": {
