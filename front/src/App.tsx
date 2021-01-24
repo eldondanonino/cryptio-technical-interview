@@ -21,7 +21,7 @@ function App (): JSX.Element {
         address: address
       }
     } )
-    .then( res => console.log(res))
+    .then( res => console.log(res)) //receiving the array of transactions
     .catch(err => console.error(err) )
   }
   return (
