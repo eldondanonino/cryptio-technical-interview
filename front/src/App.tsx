@@ -13,7 +13,17 @@ function App (): JSX.Element {
         setAPIIsLive(false)
       })
   })
-
+  
+  function checkAddress(address : String){
+    console.log(`checking with address = ${address}`)
+    const bob = axios.get('http://localhost:8080/address',{
+      params: {
+        address: address
+      }
+    } )
+    .then( res => console.log(res))
+    .catch(err => console.error(err) )
+  }
   return (
     <div style={{ maxWidth: '42em', margin: '0 auto' }}>
       <p style={{ fontWeight: 'bold' }}>Bitcoin Historical Balances</p>
@@ -23,7 +33,7 @@ function App (): JSX.Element {
         value={address}
         onChange={e => setAddress(e.target.value)}
       />
-      <input style={{ marginLeft: '1em' }} type='submit' value='Go!' />
+      <input style={{ marginLeft: '1em' }} type='submit' value='Go!' onClick={()=> checkAddress(address)/*() =>console.log(address)*/}/>
 
       {
         address !== ''
