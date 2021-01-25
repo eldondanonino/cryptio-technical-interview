@@ -10,34 +10,41 @@ app.use(cors())
 app.get('/address', async (req, res) => { //asynchronous function getting the address from the api
   console.log("server side reached for check")
   try{
-    const bob =  await axios.get(`https://blockchain.info/rawaddr/${req.query.address}`)
-    console.log(bob);
+    const bob = await axios.get(`https://blockchain.info/rawaddr/${req.query.address}`)
+    console.log(bob); 
 
-    let myTransactionArray : Array<number> = bob.data.final_balance//declaring an array of transaction 
-    let i : number = 1
+    let myTransactionArray : Array<number> = []
+    myTransactionArray.push(bob.data.final_balance)//declaring an array of transaction 
+
     
 
-    //Extracting an array of all transactions concerning our address
+    //Extracting an array of all balance change concerning our address
 
-    for (let transactions of bob.data.txs) //for the transactions of the address
+    for (let transactions of bob.data.txs) //for each transaction of the address
     {
-      let check : boolean = false
-      for (let input in bob.data.transaction.inputs) //checking the inputs for the address
+      let check : boolean = false 
+      console.log("first for reached")
+      for (let input in transactions.inputs) //checking the inputs 
       {
-        if(bob.data.transaction.input.prev_out.addr === req.query.adr)//if we found the transaction
+        console.log("second for reached")
+        if(transactions.input.prev_out.addr === req.query.adr)//if we found the transaction
         {
-          myTransactionArray.push(-bob.data.transaction.input.prev_out.value) //we remove the amout of the transaction
+          console.log("first if reached")
+          myTransactionArray.push(-transactions.input.prev_out.value) //we deduce the amout of the transaction
           check = true //the transaction is marked as found
           break
-        }
+        } 
       }
       if (check === false) //the transaction was not an input
       {
-        for(let output in bob.data.transaction.outputs) //same for outputs
+        console.log("second if reached")
+        for(let output in transactions.outputs) //same for outputs
         {
-          if (bob.data.transaction.output.addr === req.query.addr)
+          console.log("last for reached")
+          if (transactions.output.addr === req.query.addr)
           {
-            myTransactionArray.push(bob.data.transaction.output.prev_out.value)
+            console.log("last if reached")
+            myTransactionArray.push(transactions.output.prev_out.value)
             break
           }
         }
