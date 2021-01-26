@@ -1,68 +1,65 @@
-import express, { json } from 'express'
-import cors from 'cors'
-import axios from 'axios'
+import express from "express";
+import cors from "cors";
+import axios, { AxiosResponse } from "axios";
 
-const app = express()
+const app = express();
 
 // Enable CORS for *
-app.use(cors())
+app.use(cors());
 
-app.get('/address', async (req, res) => { //asynchronous function getting the address from the api
-  console.log("server side reached for check")
-  try{
-    const bob = await axios.get(`https://blockchain.info/rawaddr/${req.query.address}`)
-    console.log(bob); 
-
-    let myTransactionArray : Array<number> = []
-    myTransactionArray.push(bob.data.final_balance)//declaring an array of transaction 
-
-    
-
-    //Extracting an array of all balance change concerning our address
-
-    for (let transactions of bob.data.txs) //for each transaction of the address
-    {
-      let check : boolean = false 
-      console.log("first for reached")
-      for (let input in transactions.inputs) //checking the inputs 
-      {
-        console.log("second for reached")
-        if(transactions.input.prev_out.addr === req.query.adr)//if we found the transaction
+app.get("/address", async (req, res) => {
+  //asynchronous function getting the address from the api
+  console.log("server side reached for check");
+  try {
+    let offset: number = 0;
+    let bob: AxiosResponse<any>;
+    let myTransactionArray: Array<number> = [];
+    do {
+      bob = await axios.get(
+        `https://blockchain.info/rawaddr/${req.query.address}`,
         {
-          console.log("first if reached")
-          myTransactionArray.push(-transactions.input.prev_out.value) //we deduce the amout of the transaction
-          check = true //the transaction is marked as found
-          break
-        } 
-      }
-      if (check === false) //the transaction was not an input
-      {
-        console.log("second if reached")
-        for(let output in transactions.outputs) //same for outputs
-        {
-          console.log("last for reached")
-          if (transactions.output.addr === req.query.addr)
-          {
-            console.log("last if reached")
-            myTransactionArray.push(transactions.output.prev_out.value)
-            break
-          }
+          params: {
+            offset: offset,
+          },
         }
+      );
+
+      if (offset === 0) myTransactionArray.push(bob.data.final_balance); //declaring an array of transaction
+
+      //Extracting an array of all balance change concerning our address
+
+      for (let transactions of bob.data.txs) {
+        //for each transaction of the address
+        myTransactionArray.push(transactions.result);
       }
+
+      //sending the newly formed array to the front
+
+      offset += 50;
+    } while (bob.data.n_tx - offset > 0);
+    console.log("\n\n----   TRANSACTION -----");
+    console.log(myTransactionArray);
+    let sum: number = 0;
+    for (let transaction of myTransactionArray) {
+      sum += transaction;
     }
-    res.send(myTransactionArray) //sending the newly formed array to the front
+    console.log(sum);
+    res.send(myTransactionArray);
+  } catch (err) {
+    console.log(err);
+    res.send("anvoi 1 vré adres stépé");
   }
-  catch(err)
-  {
-    res.send("anvoi 1 vré adres stépé")
-  }
-})
+});
 
-app.get('/ping', (_, res) => {
-  res.send('pong')
-})
+app.get("/ping", (_, res) => {
+  res.send("pong");
+});
 
-const port = 8080
+const port = 8080;
 app.listen(port, () => {
-  console.log(`Server listening on port ${port} (${process.env.NODE_ENV ?? 'unknown environment'})`)
-})
+  console.log(
+    `Server listening on port ${port} (${
+      process.env.NODE_ENV ?? "unknown environment"
+    })`
+  );
+});
