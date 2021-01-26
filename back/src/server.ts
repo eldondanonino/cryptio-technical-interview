@@ -8,12 +8,13 @@ const app = express();
 app.use(cors());
 
 app.get("/address", async (req, res) => {
-  //asynchronous function getting the address from the api
   console.log("server side reached for check");
   try {
     let offset: number = 0;
     let bob: AxiosResponse<any>;
-    let myTransactionArray: Array<number> = [];
+    
+   console.log("aaaaaaaaaaaaaaaaaaa")
+   let myTransactionArray: Array<number> = []
     do {
       bob = await axios.get(
         `https://blockchain.info/rawaddr/${req.query.address}`,
@@ -24,7 +25,7 @@ app.get("/address", async (req, res) => {
         }
       );
 
-      if (offset === 0) myTransactionArray.push(bob.data.final_balance); //declaring an array of transaction
+      //if (offset === 0) myTransactionArray.push(bob.data.final_balance); 
 
       //Extracting an array of all balance change concerning our address
 
@@ -44,7 +45,7 @@ app.get("/address", async (req, res) => {
       sum += transaction;
     }
     console.log(sum);
-    res.send(myTransactionArray);
+    res.send(myTransactionArray)
   } catch (err) {
     console.log(err);
     res.send("anvoi 1 vré adres stépé");
