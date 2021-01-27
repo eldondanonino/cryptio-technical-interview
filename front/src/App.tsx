@@ -114,7 +114,7 @@ function App(): JSX.Element {
 
       {address !== "" ? (
         <p>
-          Historical balances for address <u> {address} </u> should appear
+          Historical balances for address <b style = {{color : "#EA9010"}}> {address} </b> should appear
           here...
         </p>
       ) : (
@@ -123,7 +123,7 @@ function App(): JSX.Element {
 
       
       {APIIsLive ? (
-        <p>The API is live!</p>
+        <p style= {{color : "#37FF8B"}}>The API is live!</p>
       ) : (
           <p style={{ color: "#DB5461" }}>The API did not respond...</p>
         )}
