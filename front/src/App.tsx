@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import "../src/style.css"
 
 function App(): JSX.Element {
   const [address, setAddress] = useState("");
@@ -50,7 +51,7 @@ function App(): JSX.Element {
 
               <td>
                 {" "}<b>Transaction</b> :{" "}
-                <span style={{ color: "green" }}>
+                <span style={{ color: "#37FF8B" }}>
                   + {(dataElement / 100000000).toFixed(9)} BTC{" "}
                 </span>
               </td>
@@ -70,7 +71,7 @@ function App(): JSX.Element {
               <td>
                 <b>Transaction</b> :{" "}
 
-                <span style={{ color: "red" }}>
+                <span style={{ color: "#DB5461" }}>
                   - {(-dataElement / 100000000).toFixed(9)} BTC
                 </span>
 
@@ -81,20 +82,22 @@ function App(): JSX.Element {
         );
       });
     } else {
-      transArray = <h2 style={{ color: "red" }}>Your address does not appear to exist...</h2>;
+      transArray = <h2 style={{ color: "#DB5461" }}>Your address does not appear to exist...</h2>;
     }
   }
 
   return (
-    <div style={{ maxWidth: "42em", margin: "0 auto" }}>
+    <div className="global">
+      <div className="container" style={{ maxWidth: "42em", margin: "0 auto" }}>
       <p style={{ fontWeight: "bold" }}>Bitcoin Historical Balances</p>
-      <input
+      <input className="searchbar"
         type="text"
         placeholder="Please input a valid Bitcoin address"
         value={address}
         onChange={(e) => setAddress(e.target.value)}
       />
-      <input
+      
+      <input className="go"
         style={{ marginLeft: "1em" }}
         type="submit"
         value="Go!"
@@ -111,19 +114,20 @@ function App(): JSX.Element {
 
       {address !== "" ? (
         <p>
-          Historical balances for address <code>{address}</code> should appear
+          Historical balances for address <u> {address} </u> should appear
           here...
         </p>
       ) : (
           <p>There is no address...</p>
         )}
 
-      <hr />
+      
       {APIIsLive ? (
         <p>The API is live!</p>
       ) : (
-          <p style={{ color: "red" }}>The API did not respond...</p>
+          <p style={{ color: "#DB5461" }}>The API did not respond...</p>
         )}
+    </div>
     </div>
   );
 }
