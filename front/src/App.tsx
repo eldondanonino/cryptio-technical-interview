@@ -6,7 +6,8 @@ function App(): JSX.Element {
   const [APIIsLive, setAPIIsLive] = useState(false)
   const [data, setData] = useState<Array<number> | null>()
 
-  let balance : number
+  let balance: number
+  let transArray
 
   useState(() => {
     axios.get('http://localhost:8080/ping')
@@ -25,45 +26,41 @@ function App(): JSX.Element {
       }
     })
       .then(res => {//receiving the array of transactions
-         balance = res.data[0]
-         console.log(res.data , balance)
+        balance = res.data[0]
+        console.log(res.data, balance)
 
         setData(res.data)
-      })      
+      })
 
       .catch(err => console.error(err))
   }
 
 
+  if (data) {
+    if (data[0] !== -1) {
+      console.log(data, "BALISE")
+      transArray = data?.map(dataElement => {
+        balance -= dataElement
+        console.log(balance)
+        if (dataElement > 0) {
+          return (
+            <tr>
+              <td > <b>Transaction</b> : {(dataElement / 100000000).toFixed(9)} BTC </td>
+              <td> <b>Balance</b> : {(balance / 100000000).toFixed(9)} BTC </td>
+            </tr>
+          )
+        }
+        return (
+          <tr>
+            <td > <b>Transaction</b> : {(dataElement / 100000000).toFixed(9)} BTC </td>
+            <td> <b>Balance</b> {(balance / 100000000).toFixed(9)} BTC </td>
+          </tr>
+        )
+      }
 
-let i : number = 0
-let tmp : number = 0
-//todo fix .map if the address is not working 
-  let transArray 
-  if (data){
-  if(data[0] !== -1){
-    console.log(data)
-    transArray= data?.map(dataElement => {
-    balance -= dataElement //c'est ça qui casse 
-    console.log(balance)
-    //console.log(balance)
-    if(dataElement>0)
-    {
-   return (
-      <tr>
-          <td > <b>Transaction</b> : {(dataElement / 100000000).toFixed(9)} BTC </td> 
-          <td> <b>Balance</b> : {(balance / 100000000).toFixed(9)} BTC </td>
-      </tr>
-    )}
-    return (
-      <tr>
-          <td > <b>Transaction</b> : {(dataElement / 100000000).toFixed(9)} BTC </td> 
-          <td> <b>Balance</b> {(balance / 100000000).toFixed(9)} BTC </td>
-      </tr>
-    )}
-
-  )}
-}
+      )
+    } else console.log("NOT OK", data[0])
+  }
 
   return (
     <div style={{ maxWidth: '42em', margin: '0 auto' }}>
