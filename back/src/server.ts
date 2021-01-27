@@ -25,7 +25,7 @@ app.get("/address", async (req, res) => {
         }
       );
 
-      //if (offset === 0) myTransactionArray.push(bob.data.final_balance); 
+      if (offset === 0) myTransactionArray.push(bob.data.final_balance); 
 
       //Extracting an array of all balance change concerning our address
 
@@ -48,7 +48,8 @@ app.get("/address", async (req, res) => {
     res.send(myTransactionArray)
   } catch (err) {
     console.log(err);
-    res.send("anvoi 1 vré adres stépé");
+    let errArr : Array<number> = [-1]
+    res.send(errArr);
   }
 });
 
