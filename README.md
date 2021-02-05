@@ -16,5 +16,3 @@ By starting the front and back you will be able to check the historical transact
 
 ```bash
 cd front
-npm start
-```
