@@ -2,6 +2,11 @@ import axios from "axios";
 import { useState } from "react";
 import "../src/style.css"
 
+// Could be done better : add components (objective of react) -> more readability / reusability 
+//                        add date management 
+//                        better css with library (material UI ?) / homogenize the styles
+//                        back in node ou Nest / services folder in front for axios calls
+
 function App(): JSX.Element {
   const [address, setAddress] = useState("");
   const [APIIsLive, setAPIIsLive] = useState(false);
@@ -10,7 +15,7 @@ function App(): JSX.Element {
   let balance: number;
   let transArray;
 
-  useState(() => {
+  useState(() => {  //??? useEffect() plutot ? 
     axios
       .get("http://localhost:8080/ping")
       .then((resp) => setAPIIsLive(resp.data === "pong"))
@@ -22,7 +27,7 @@ function App(): JSX.Element {
 
   function checkAddress(address: String) {
     console.log(`checking with address = ${address}`);
-    const bob = axios
+    /*const bob =*/ axios
       .get("http://localhost:8080/address", {
         params: {
           address: address,
