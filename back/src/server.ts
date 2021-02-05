@@ -12,7 +12,6 @@ app.get("/address", async (req, res) => {
   try {
     let offset: number = 0;
     let bob: AxiosResponse<any>;
-    let sum: number = 0;
     let myTransactionArray: Array<number> = []
     
     do {
@@ -20,7 +19,7 @@ app.get("/address", async (req, res) => {
         `https://blockchain.info/rawaddr/${req.query.address}`,
         {
           params: {
-            offset: offset, //we offset if we have more transactions than the amount per page 
+            offset: offset, //we offset if we have more transactions than the amount per page (50)
           },
         }
       );
@@ -33,20 +32,18 @@ app.get("/address", async (req, res) => {
         //for each transaction of the address
         myTransactionArray.push(transactions.result);
       }
-
-      //sending the newly formed array to the front
-
       offset += 50;
     } while (bob.data.n_tx - offset > 0);
 
-    console.log("\n\n----   TRANSACTION -----");
+    console.log("\n\n----   TRANSACTIONS -----");
     console.log(myTransactionArray);
 
-
+    /*let sum: number = 0;
     for (let transaction of myTransactionArray) {
-      sum += transaction;
+      sum += transaction;                               //Just some checking for final balances to make sure the computation is ok
     }
-    console.log(sum);
+    console.log(sum);*/
+    
     res.send(myTransactionArray)
   } catch (err) {
     console.log(err);

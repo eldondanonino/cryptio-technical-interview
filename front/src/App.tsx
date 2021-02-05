@@ -5,7 +5,7 @@ import "../src/style.css"
 function App(): JSX.Element {
   const [address, setAddress] = useState("");
   const [APIIsLive, setAPIIsLive] = useState(false);
-  const [data, setData] = useState<Array<number> | null>();
+  const [data, setData] = useState<Array<number> | null>(); //dynamically stores the data
 
   let balance: number;
   let transArray;
@@ -39,8 +39,9 @@ function App(): JSX.Element {
   if (data) { 
     if (data[0] !== -1) { //if it is a valid address
       balance = data[0]; //we set the balance (first element of the array)
-      transArray = data?.map((dataElement) => {
-      balance -= dataElement;
+
+      transArray = data.map((dataElement) => {
+        balance -= dataElement;
         if (dataElement > 0) {
           return (
             <tr>
@@ -66,7 +67,7 @@ function App(): JSX.Element {
               <b>Balance</b> : {(balance / 100000000).toFixed(9)} BTC
             </td>
 
-            {dataElement !== 0 
+            {dataElement !== data[0] //fixed a small issue for when the wallet is not currently empty
             ? (
               <td>
                 <b>Transaction</b> :{" "}
@@ -101,7 +102,7 @@ function App(): JSX.Element {
         style={{ marginLeft: "1em" }}
         type="submit"
         value="Go!"
-        onClick={() => checkAddress(address) /*() =>console.log(address)*/}
+        onClick={() => checkAddress(address)}
       />
 
       {data ? (
@@ -113,12 +114,12 @@ function App(): JSX.Element {
         )}
 
       {address !== "" ? (
-        <p>
+        <p className="global">
           Historical balances for address <b style = {{color : "#EA9010"}}> {address} </b> should appear
           here...
-        </p>
+        </p >
       ) : (
-          <p>There is no address...</p>
+          <p className="global">There is no address...</p>
         )}
 
       
